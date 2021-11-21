@@ -1,0 +1,11 @@
+// 登録ページ
+Route::get('/register', 'App\Http\Controllers\AttesController@register')->name('register');
+
+//確認ページ
+Route::post('/confirm', 'App\Http\Controllers\AttesController@confirm')->name('confirm');
+
+// DB挿入
+Route::post('/member', 'App\Http\Controllers\AttesController@member')->name('member');
+
+// ログイン
+Route::get('/login', 'App\Http\Controllers\AttesController@login')->name('login');
