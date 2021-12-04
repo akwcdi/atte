@@ -60,6 +60,12 @@ class User extends Authenticatable
         'profile_photo_url',
     ];
 
+    public function getDetail()
+    {
+        return $this->name;
+    }
+
+
     public function atte(){
         return $this->hasMany(Atte::class);
     }

@@ -1,14 +1,21 @@
 @php
-$title = '打刻画面';
+$title = 'atte';
 @endphp
 
 @extends('layout')
 
 @section('content')
-
-<button class="btn btn-secondary" onClick="(function(){document.getElementById('logout-form').submit();return false;})();">ログアウト</button>
+<div class="d-flex justify-content-end ">
+  <div type="submit" name="attendance">
+        {{ Form::open(['route' => 'attendance','class' => 'align-items-center','method' => 'POST']) }}
+          {{ csrf_field() }}
+            {{ Form::submit('勤怠画面', ['class' => 'btn btn-outline-secondary align-items-center h-100 w-100']) }}
+        {{ Form::close() }}
+  </div>
+  <button class="btn btn-outline-secondary" onClick="(function(){document.getElementById('logout-form').submit();return false;})();">ログアウト</button>
   {{ Form::open(['route' => 'logout', 'id' => 'logout-form']) }}
   {{ Form::close() }}
+</div>
 
 <div class="vh-100">
     <div class="h-50 d-flex align-items-center justify-content-around">

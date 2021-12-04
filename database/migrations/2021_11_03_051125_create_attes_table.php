@@ -15,8 +15,8 @@ class CreateAttesTable extends Migration
     {
         Schema::create('login', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->foreignId('users_id')->constrained();
-            $table->dateTime('enter_time')->nullable();
+            $table->foreignId('user_id')->constrained();
+            $table->dateTime('enter_time');
             $table->dateTime('exit_time')->nullable();
             $table->dateTime('reststart_time')->nullable();
             $table->dateTime('restend_time')->nullable();

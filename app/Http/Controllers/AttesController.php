@@ -31,16 +31,16 @@ class attesController extends Controller
          * 打刻は1日一回までにしたい 
          * DB
          */
-        $oldTimestamp = Atte::where('users_id', $users->id)->latest()->first();
+        $oldTimestamp = Atte::where('user_id', $users->id)->latest()->first();
         if ($oldTimestamp) {
             $oldTimestamp_enter = new Carbon($oldTimestamp->enter_time);
             $oldTimestampDay = $oldTimestamp_enter->startOfDay();
         } else {
             $atte = Atte::create([
-            'users_id' => $users->id,
+            'user_id' => $users->id,
             'enter_time' => Carbon::now(),
             ]);
-            return redirect()->back()->with('my_status', '出勤打刻が完了しました');
+            return redirect()->back()->with('my_status', '出勤しました');
         }
         
         $newTimestampDay = Carbon::today();
@@ -49,49 +49,59 @@ class attesController extends Controller
          * 日付を比較する。同日付の出勤打刻で、かつ直前のTimestampの退勤打刻がされていない場合エラーを吐き出す。
          */
         if (($oldTimestampDay == $newTimestampDay) && (empty($oldTimestamp->exit_time))){
-            return redirect()->back()->with('error', 'すでに出勤打刻がされています');
+            return redirect()->back()->with('error', 'すでに出勤しています');
         }
 
         $atte = Atte::create([
-            'users_id' => $users->id,
+            'user_id' => $users->id,
             'enter_time' => Carbon::now(),
         ]);
 
-        return redirect()->back()->with('my_status', '出勤打刻が完了しました');
+        return redirect()->back()->with('my_status', '出勤しました');
     }
 
     public function exit_time()
     {
         $users = Auth::user();
-        $atte = Atte::where('users_id', $users->id)->latest()->first();
+        $atte = Atte::where('user_id', $users->id)->latest()->first();
+        
 
         /**
-         * 退勤打刻しているか、直前のTimestampの出勤打刻がされていない場合エラーを吐き出す。
+         * 退勤打刻している場合エラーを吐き出す。
          */
 
-        if( !empty($atte->exit_time)) {
-            return redirect()->back()->with('error', '既に退勤の打刻がされているか、出勤打刻されていません');
+        if( !empty($atte->exit_time) ) {
+            return redirect()->back()->with('error', '退勤しています');
+        }
+
+        /**
+         * 出勤打刻がされていない場合エラーを吐き出す。
+         */
+
+        if((empty($atte->enter_time))) {
+            return redirect()->back()->with('error', '出勤していません');
         }
 
         $atte->update([
             'exit_time' => Carbon::now(),
             ]);
 
-            return redirect()->back()->with('my_status', '退勤打刻が完了しました');
+            return redirect()->back()->with('my_status', '退勤しました');
     }
 
     public function reststart_time()
     {
         $users = Auth::user();
-        $atte = Atte::where('users_id', $users->id)->latest()->first();
+        $atte = Atte::where('user_id', $users->id)->latest()->first();
 
         /**
          * 出勤打刻がされていない場合エラーを吐き出す。
          */
 
-        if( empty($atte->enter_time)) {
-            return redirect()->back()->with('error', '出勤打刻されていません');
+        if( empty($atte->enter_time) || !empty($atte->exit_time)) {
+            return redirect()->back()->with('error', '出勤していません');
         }
+
 
         $atte->update([
             'reststart_time' => Carbon::now(),
@@ -103,7 +113,15 @@ class attesController extends Controller
     public function restend_time()
     {
         $users = Auth::user();
-        $atte = Atte::where('users_id', $users->id)->latest()->first();
+        $atte = Atte::where('user_id', $users->id)->latest()->first();
+
+        /**
+         * 出勤打刻がされていない場合エラーを吐き出す。
+         */
+
+        if( empty($atte->enter_time) || !empty($atte->exit_time)) {
+            return redirect()->back()->with('error', '出勤していません');
+        }
 
         /**
          * 休憩開始がされていない場合エラーを吐き出す。
@@ -121,4 +139,10 @@ class attesController extends Controller
     }
 
 
+    public function atte(Request $request)
+    {
+            $items = Atte::all();
+    }
+
 }
+
