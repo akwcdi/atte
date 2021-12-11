@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Models\Atte;
 use App\Models\User;
 
 class UsersController extends Controller
@@ -19,7 +20,5 @@ class UsersController extends Controller
             // ログインしていなかったらログイン画面を表示
             return view('auth/login');
         }
-
-        
     }
 }

@@ -27,11 +27,7 @@ Route::group(['middleware' => 'auth'], function() {
     Route::post('/restend_time', 'App\Http\Controllers\AttesController@restend_time')->name('restend_time');
 });
 
-// リレーション
-Route::prefix('atte')->group(function () {
-    Route::get('', [AttesController::class, 'atte']);
-});
 
 // 勤怠確認ページ
-Route::get('/attendance', 'App\Http\Controllers\UsersController@attendance')->name('attendance');
-Route::post('/attendance', 'App\Http\Controllers\UsersController@attendance')->name('attendance');
+Route::get('/attendance', 'App\Http\Controllers\AttesController@attendance')->name('attendance');
+Route::post('/attendance', 'App\Http\Controllers\AttesController@attendance')->name('attendance');

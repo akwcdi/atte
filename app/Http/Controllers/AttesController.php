@@ -38,7 +38,7 @@ class attesController extends Controller
         } else {
             $atte = Atte::create([
             'user_id' => $users->id,
-            'enter_time' => Carbon::now(),
+            'enter_time' => Carbon::now()->format('Y-m-d H:i'),
             ]);
             return redirect()->back()->with('my_status', '出勤しました');
         }
@@ -54,7 +54,7 @@ class attesController extends Controller
 
         $atte = Atte::create([
             'user_id' => $users->id,
-            'enter_time' => Carbon::now(),
+            'enter_time' => Carbon::now()->format('Y-m-d H:i'),
         ]);
 
         return redirect()->back()->with('my_status', '出勤しました');
@@ -83,7 +83,7 @@ class attesController extends Controller
         }
 
         $atte->update([
-            'exit_time' => Carbon::now(),
+            'exit_time' => Carbon::now()->format('Y-m-d H:i'),
             ]);
 
             return redirect()->back()->with('my_status', '退勤しました');
@@ -104,7 +104,7 @@ class attesController extends Controller
 
 
         $atte->update([
-            'reststart_time' => Carbon::now(),
+            'reststart_time' => Carbon::now()->format('Y-m-d H:i'),
             ]);
 
             return redirect()->back()->with('my_status', '休憩開始しました');
@@ -132,16 +132,23 @@ class attesController extends Controller
         }
 
         $atte->update([
-            'restend_time' => Carbon::now(),
+            'restend_time' => Carbon::now()->format('Y-m-d H:i'),
             ]);
 
             return redirect()->back()->with('my_status', '休憩終了しました');
     }
 
-
-    public function atte(Request $request)
-    {
+    public function attendance(Request $request)
+    {if (Auth::check()) {
+            // ログイン済みだったら勤怠管理画面を表示
             $items = Atte::all();
+            $items = Atte::simplePaginate(5);
+            return view('attendance', ['items' => $items]);
+
+        } else {
+            // ログインしていなかったらログイン画面を表示
+            return view('auth/login');
+        }
     }
 
 }

@@ -20,6 +20,11 @@ class Atte extends Model
         'reststart_time',
         'restend_time',
     ];
+    
+    public function getID()
+    {
+        return $this->user_id;
+    }
 
     public function getEnter(){
         return $this->enter_time;
@@ -35,10 +40,5 @@ class Atte extends Model
 
     public function getRestend(){
         return $this->restend_time;
-    }
-
-    public function user()
-    {
-        $this->belongsTo(User::class);
     }
 }

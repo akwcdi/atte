@@ -24,6 +24,9 @@ class User extends Authenticatable
      * @var string[]
      */
 
+     // Primary Key
+    public $primaryKey = 'id';
+
     protected $fillable = [
         'name',
         'email',
@@ -59,15 +62,5 @@ class User extends Authenticatable
     protected $appends = [
         'profile_photo_url',
     ];
-
-    public function getDetail()
-    {
-        return $this->name;
-    }
-
-
-    public function atte(){
-        return $this->hasMany(Atte::class);
-    }
 
 }
